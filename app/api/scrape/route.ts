@@ -14,12 +14,12 @@ function extractAppId(input: string): string | null {
 }
 
 type RawReview = {
-  reviewId: string;
+  id: string;
   score: number;
-  at: unknown;
-  content: string;
-  thumbsUpCount: number;
-  appVersion: string;
+  date: string;
+  text: string;
+  thumbsUp: number;
+  version: string;
 };
 
 export async function POST(req: NextRequest) {
@@ -83,16 +83,16 @@ export async function POST(req: NextRequest) {
   const seen = new Set<string>();
   const reviews: unknown[] = [];
   for (const r of allRevs) {
-    if (r.reviewId && !seen.has(r.reviewId)) {
-      seen.add(r.reviewId);
+    if (r.id && !seen.has(r.id)) {
+      seen.add(r.id);
       reviews.push({
-        id: r.reviewId,
+        id: r.id,
         app: appId,
         score: r.score,
-        date: r.at ? new Date(r.at as string).toISOString() : null,
-        content: r.content ?? "",
-        thumbsUp: r.thumbsUpCount ?? 0,
-        appVersion: r.appVersion ?? "",
+        date: r.date ? new Date(r.date).toISOString() : null,
+        content: r.text ?? "",
+        thumbsUp: r.thumbsUp ?? 0,
+        appVersion: r.version ?? "",
       });
     }
   }
